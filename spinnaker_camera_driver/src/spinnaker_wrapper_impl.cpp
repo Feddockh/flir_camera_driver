@@ -501,6 +501,14 @@ void SpinnakerWrapperImpl::monitorStatus()
     }
     auto now = chrono::high_resolution_clock::now();
     uint64_t t = chrono::duration_cast<chrono::nanoseconds>(now.time_since_epoch()).count();
+
+    // If the acquisition has not been started, the last time will be zero.
+    // In this case, we don't want to check the timeout.
+    if (lastTime == 0) {
+      lastTime_ = t;
+      continue;
+    }
+
     if (t - lastTime > acquisitionTimeout_ && camera_) {
       std::cout << "WARNING: acquisition timeout, restarting!" << std::endl;
       // Mucking with the camera in this thread without proper

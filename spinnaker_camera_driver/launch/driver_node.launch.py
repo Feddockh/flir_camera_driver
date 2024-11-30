@@ -148,6 +148,7 @@ example_parameters = {
         'compute_brightness': False,
         'adjust_timestamp': True,
         'dump_node_map': False,
+        'acquisition_timeout': 1000.0,
 
         # Parameters for the FLIR Firefly camera
         'acquisition_mode': 'SingleFrame',
