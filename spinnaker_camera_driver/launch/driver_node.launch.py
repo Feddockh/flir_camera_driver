@@ -141,6 +141,51 @@ example_parameters = {
         'image_adjust_method': 'PlateauHistogram',
         'video_orientation': 'Normal',  # "Normal" "Invert" "Revert" "InvertRevert"
     },
+    'firefly': {
+
+        # Parameters for the camera
+        'debug': False,
+        'compute_brightness': False,
+        'adjust_timestamp': True,
+        'dump_node_map': False,
+
+        # Parameters for the FLIR Firefly camera
+        'acquisition_mode': 'SingleFrame',
+        'exposure_mode': 'Timed',
+        'exposure_auto': 'Off',
+        'exposure_time': 10000.0,
+        'acquisition_frame_rate': 30.0,
+        'acquisition_frame_rate_enable': True,
+        'trigger_mode': 'Off',
+        'trigger_selector': 'FrameStart',
+        'trigger_source': 'Line3',
+        'trigger_activation': 'RisingEdge',
+        'trigger_mode': 'On',
+        'sensor_shutter_mode': 'Global',
+
+        'gain_auto': 'Off',
+        'black_level_selector': 'All',
+        'black_level': 0.0,
+        'black_level_clamping_enable': False,
+
+        'gamma': 1.0,
+        'gamma_enable': True,
+        
+        'width': 1440,
+        'height': 1080,
+        'pixel_format': 'Mono8',
+
+        'buffer_queue_size': 4,
+        'chunk_mode_active': False,
+        'chunk_selector_frame_id': 'FrameID',
+        'chunk_enable_frame_id': True,
+        'chunk_selector_exposure_time': 'ExposureTime',
+        'chunk_enable_exposure_time': True,
+        'chunk_selector_gain': 'Gain',
+        'chunk_enable_gain': True,
+        'chunk_selector_timestamp': 'Timestamp',
+        'chunk_enable_timestamp': True,
+    },
 }
 
 
@@ -187,12 +232,12 @@ def generate_launch_description():
             ),
             LaunchArg(
                 'camera_type',
-                default_value='blackfly_s',
+                default_value='firefly',
                 description='type of camera (blackfly_s, chameleon...)',
             ),
             LaunchArg(
                 'serial',
-                default_value="'20435008'",
+                default_value="'21039765'",
                 description='FLIR serial number of camera (in quotes!!)',
             ),
             LaunchArg(
