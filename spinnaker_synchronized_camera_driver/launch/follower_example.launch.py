@@ -40,14 +40,14 @@ camera_list = {
 }
 
 exposure_controller_parameters = {
-    'brightness_target': 100,  # from 0..255
-    'brightness_tolerance': 20,  # when to update exposure/gain
+    'brightness_target': 120,  # from 0..255
+    'brightness_tolerance': 10,  # when to update exposure/gain
     # watch that max_exposure_time is short enough
     # to support the trigger frame rate!
     # 'max_exposure_time': 15000,  # usec
     # 'min_exposure_time': 5000,  # usec
-    'max_exposure_time': 100000.0,  # usec 
-    'min_exposure_time': 1000.0,  # usec
+    'max_exposure_time': 100000,  # usec 
+    'min_exposure_time': 1000,  # usec
     'max_gain': 0.0,
     'gain_priority': False,
 }
@@ -57,7 +57,7 @@ cam_parameters = {
     # ROS camera parameters
     'debug': False,
     'quiet': True,
-    'compute_brightness': True,
+    'compute_brightness': True, # Assumed to be true
     'adjust_timestamp': True,
     'acquisition_timeout': 1000.0,
     'buffer_queue_size': 1,
@@ -67,7 +67,7 @@ cam_parameters = {
     'exposure_mode': 'Timed',
     'exposure_auto': 'Off',
     'exposure_time': 10000.0, # Not used if exposure_auto is on
-    'acquisition_frame_rate': 10.0, # Not used if single frame mode is on
+    # 'acquisition_frame_rate': 10.0, # Not used if single frame mode is on
     'acquisition_frame_rate_enable': True,
     'trigger_mode': 'Off', # Have to set to 'Off' to configure trigger
     'trigger_selector': 'FrameStart',

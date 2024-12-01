@@ -221,7 +221,7 @@ void MasterExposureController::update(
   // Compute the brightness of the image
   auto brightness = compute_brightness(
     static_cast<const uint8_t *>(img->data_), img->width_, img->height_, img->stride_, 1);
-  // std::cout << "brightness: " << brightness << std::endl;
+//   std::cout << "brightness: " << brightness << std::endl;
 
   // const int b = std::min(std::max(1, static_cast<int>(img->brightness_)), 255);
   const int b = std::min(std::max(1, static_cast<int>(brightness)), 255);
