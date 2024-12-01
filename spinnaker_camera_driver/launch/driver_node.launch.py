@@ -155,12 +155,14 @@ example_parameters = {
         'exposure_mode': 'Timed',
         'exposure_auto': 'Off',
         'exposure_time': 10000.0,
-        'acquisition_frame_rate': 30.0,
+        'acquisition_frame_rate': 10.0,
         'acquisition_frame_rate_enable': True,
-        'trigger_mode': 'Off',
+        'trigger_mode': 'Off', # Have to set to 'Off' to configure trigger
         'trigger_selector': 'FrameStart',
         'trigger_source': 'Line3',
-        'trigger_activation': 'RisingEdge',
+        'trigger_activation': 'FallingEdge',
+        'line_selector': 'Line3',
+        'line_mode': 'Input',
         'trigger_mode': 'On',
         'sensor_shutter_mode': 'Global',
 

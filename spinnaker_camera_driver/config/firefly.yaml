@@ -300,6 +300,19 @@ parameters:
     type: bool
     node: ChunkDataControl/ChunkEnable
 
+  ### Digital I/O Control ###
+  - name: line_selector
+    # Description: Selects which digital I/O line to control.
+    type: enum
+    # Valid values: Line0, Line1, Line2, Line3
+    node: DigitalIOControl/LineSelector
+
+  - name: line_mode
+    # Description: Sets the mode of the selected digital I/O line.
+    type: enum
+    # Valid values: Input, Output
+    node: DigitalIOControl/LineMode
+
   ### Stream Buffer Handling Control ###
   - name: "stream_buffer_handling_mode"
     # Description: Sets the stream buffer handling mode.
