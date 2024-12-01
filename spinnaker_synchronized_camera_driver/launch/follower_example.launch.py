@@ -35,36 +35,62 @@ from launch_ros.descriptions import ComposableNode
 from launch_ros.substitutions import FindPackageShare
 
 camera_list = {
-    'cam0': '20435008',
-    'cam1': '20415937',
+    'cam0': '21039765',
+    'cam1': '21081518',
 }
 
 exposure_controller_parameters = {
-    'brightness_target': 120,  # from 0..255
+    'brightness_target': 100,  # from 0..255
     'brightness_tolerance': 20,  # when to update exposure/gain
     # watch that max_exposure_time is short enough
     # to support the trigger frame rate!
-    'max_exposure_time': 15000,  # usec
-    'min_exposure_time': 5000,  # usec
-    'max_gain': 29.9,
+    # 'max_exposure_time': 15000,  # usec
+    # 'min_exposure_time': 5000,  # usec
+    'max_exposure_time': 100000.0,  # usec 
+    'min_exposure_time': 1000.0,  # usec
+    'max_gain': 0.0,
     'gain_priority': False,
 }
 
 cam_parameters = {
+
+    # ROS camera parameters
     'debug': False,
     'quiet': True,
-    'buffer_queue_size': 1,
     'compute_brightness': True,
+    'adjust_timestamp': True,
+    'acquisition_timeout': 1000.0,
+    'buffer_queue_size': 1,
+
+    # Parameters for the FLIR Firefly camera
+    'acquisition_mode': 'SingleFrame',
+    'exposure_mode': 'Timed',
     'exposure_auto': 'Off',
-    'exposure_time': 10000,  # not used under auto exposure
-    'trigger_mode': 'On',
-    'gain_auto': 'Off',
-    'trigger_source': 'Line3',
+    'exposure_time': 10000.0, # Not used if exposure_auto is on
+    'acquisition_frame_rate': 10.0, # Not used if single frame mode is on
+    'acquisition_frame_rate_enable': True,
+    'trigger_mode': 'Off', # Have to set to 'Off' to configure trigger
     'trigger_selector': 'FrameStart',
-    'trigger_overlap': 'ReadOut',
-    'trigger_activation': 'RisingEdge',
-    'balance_white_auto': 'Continuous',
-    # You must enable chunk mode and chunks: frame_id, exposure_time, and gain
+    'trigger_source': 'Line3',
+    'trigger_activation': 'FallingEdge',
+    'line_selector': 'Line3',
+    'line_mode': 'Input',
+    'trigger_mode': 'On',
+    'sensor_shutter_mode': 'Global',
+
+    'gain_auto': 'Off',
+    'black_level_selector': 'All',
+    'black_level': 0.0,
+    'black_level_clamping_enable': False,
+
+    'gamma': 1.0,
+    'gamma_enable': True,
+    
+    'width': 1440,
+    'height': 1080,
+    'pixel_format': 'Mono8',
+
+    # Must enable chunk mode and chunks: frame id, exposure time, and gain
     'chunk_mode_active': True,
     'chunk_selector_frame_id': 'FrameID',
     'chunk_enable_frame_id': True,
@@ -72,7 +98,8 @@ cam_parameters = {
     'chunk_enable_exposure_time': True,
     'chunk_selector_gain': 'Gain',
     'chunk_enable_gain': True,
-    # The Timestamp is not used at the moment
+
+    # Timestamp is optional, but useful for debugging
     'chunk_selector_timestamp': 'Timestamp',
     'chunk_enable_timestamp': True,
 }
@@ -101,7 +128,7 @@ def make_parameters(context):
     driver_parameters[exp_ctrl_names[1] + '.master'] = exp_ctrl_names[0]
 
     # generate camera parameters
-    cam_parameters['parameter_file'] = PJoin([pd, 'blackfly_s.yaml'])
+    cam_parameters['parameter_file'] = PJoin([pd, 'firefly.yaml'])
     for cam, serial in camera_list.items():
         cam_params = {cam + '.' + k: v for k, v in cam_parameters.items()}
         cam_params[cam + '.serial_number'] = serial

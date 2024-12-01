@@ -15,6 +15,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <spinnaker_camera_driver/camera.hpp>
+#include <spinnaker_camera_driver/pixel_format.hpp>
 #include <spinnaker_synchronized_camera_driver/logging.hpp>
 #include <spinnaker_synchronized_camera_driver/master_exposure_controller.hpp>
 
@@ -193,11 +194,38 @@ bool MasterExposureController::updateExposure(double b)
   return (false);
 }
 
+static int int_ceil(size_t x, int y)
+{
+  // compute the integer ceil(x / y)
+  return (static_cast<int>((x + static_cast<size_t>(y) - 1) / y));
+}
+
+static int16_t compute_brightness(const uint8_t * data, size_t w, size_t h, size_t stride, int skip)
+{
+  const uint64_t cnt = int_ceil(w, skip) * int_ceil(h, skip);
+  uint64_t tot = 0;
+  const uint8_t * p = data;
+  for (size_t row = 0; row < h; row += skip) {
+    for (size_t col = 0; col < w; col += skip) {
+      tot += p[col];
+    }
+    p += stride * skip;
+  }
+  return (tot / cnt);
+}
+
 void MasterExposureController::update(
   spinnaker_camera_driver::Camera * cam,
   const std::shared_ptr<const spinnaker_camera_driver::Image> & img)
 {
-  const int b = std::min(std::max(1, static_cast<int>(img->brightness_)), 255);
+  // Compute the brightness of the image
+  auto brightness = compute_brightness(
+    static_cast<const uint8_t *>(img->data_), img->width_, img->height_, img->stride_, 1);
+  // std::cout << "brightness: " << brightness << std::endl;
+
+  // const int b = std::min(std::max(1, static_cast<int>(img->brightness_)), 255);
+  const int b = std::min(std::max(1, static_cast<int>(brightness)), 255);
+  
   // if the exposure parameters are not set yet, set them now
   if (currentExposureTime_ == 0) {
     currentExposureTime_ = static_cast<double>(img->exposureTime_);

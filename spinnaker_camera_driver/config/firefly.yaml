@@ -115,13 +115,6 @@ parameters:
     # Valid values: All
     node: AnalogControl/GainSelector
 
-  # Not writable
-  # - name: gain
-  #   # Description: Controls the amplification of the video signal in dB.
-  #   type: float
-  #   # Valid values: x in [0.000000, 48.000000]
-  #   node: AnalogControl/Gain
-
   - name: gain_auto
     # Description: Sets the automatic gain mode. Set to Off for manual control.
       # Set to Once for a single automatic adjustment then return to Off. Set
@@ -130,6 +123,13 @@ parameters:
     type: enum
     # Valid values: Off, Once, Continuous
     node: AnalogControl/GainAuto
+
+  # Not writable?
+  - name: gain
+    # Description: Controls the amplification of the video signal in dB.
+    type: float
+    # Valid values: x in [0.000000, 48.000000]
+    node: AnalogControl/Gain
 
   - name: black_level_selector
     # Description: Selects which black level to control.  Only All can be set

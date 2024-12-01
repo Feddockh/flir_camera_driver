@@ -149,6 +149,7 @@ example_parameters = {
         'adjust_timestamp': True,
         'dump_node_map': False,
         'acquisition_timeout': 1000.0,
+        'buffer_queue_size': 4,
 
         # Parameters for the FLIR Firefly camera
         'acquisition_mode': 'SingleFrame',
@@ -178,8 +179,7 @@ example_parameters = {
         'height': 1080,
         'pixel_format': 'Mono8',
 
-        'buffer_queue_size': 4,
-        'chunk_mode_active': False,
+        'chunk_mode_active': True,
         'chunk_selector_frame_id': 'FrameID',
         'chunk_enable_frame_id': True,
         'chunk_selector_exposure_time': 'ExposureTime',
