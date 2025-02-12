@@ -1,4 +1,5 @@
 # Configuration file for Firefly camera
+# Parameters pulled from the Spinnaker SpinView software
 
 parameters:
 
@@ -19,7 +20,7 @@ parameters:
       # to take effect.
     type: bool
     # Valid values: True, False
-    node: AcquisitionControl/AcquisitionOnBootEnable
+    node: AcquisitionControl/AcquisitionOnBoot
 
   - name: acquisition_frame_count
     # Description: Number of images to acquire during a multi frame 
@@ -46,35 +47,12 @@ parameters:
     # Vaid values: x in [29.000000, 30000014.000000]
     node: AcquisitionControl/ExposureTime
 
-  - name: acquisition_frame_rate
-    # Description: Sets the frame rate of the device in hertz.
-    type: float
-    # Valid values: x in [1.000000, 60.810798]
-    node: AcquisitionControl/AcquisitionFrameRate
-
-  # Not writable
-  # - name: resulting_frame_rate
-  #   # Description: Resulting frame rate in Hertz. If this does not equal the
-  #     # Acquisition Frame Rate it is because the Exposure Time is greater 
-  #     # than the frame time.
-  #   type: float
-  #   # Valid values: x in [1.000000, 60.810798]
-  #   node: AcquisitionControl/ResultingFrameRate
-
   - name: acquisition_frame_rate_enable
     # Description: If enabled, AcquisitionFrameRate can be used to manually
       # control the frame rate.
     type: bool
     # Valid values: True, False
     node: AcquisitionControl/AcquisitionFrameRateEnable
-
-  # Not writable
-  # - name: acquisition_line_rate
-  #   # Description: Controls the rate (in Hertz) at which the Lines in a Frame 
-  #     # are captured.
-  #   type: float
-  #   # Valid values: x in [566.620879, 67500.000000]
-  #   node: AcquisitionControl/AcquisitionLineRate
 
   - name: trigger_selector
     # Description: Sets the trigger source of the device.
@@ -97,6 +75,7 @@ parameters:
 
   - name: trigger_activation
     # Description: Specifies the activation of the selected trigger.
+      # Is only valid when trigger source is not software.
     type: enum
     # Valid values: RisingEdge, FallingEdge, LevelHigh, LevelLow
     node: AcquisitionControl/TriggerActivation
@@ -115,6 +94,12 @@ parameters:
     # Valid values: All
     node: AnalogControl/GainSelector
 
+  - name: gain
+    # Description: Controls the amplification of the video signal in dB.
+    type: float
+    # Valid values: x in [0.000000, 48.000000]
+    node: AnalogControl/Gain
+
   - name: gain_auto
     # Description: Sets the automatic gain mode. Set to Off for manual control.
       # Set to Once for a single automatic adjustment then return to Off. Set
@@ -123,13 +108,6 @@ parameters:
     type: enum
     # Valid values: Off, Once, Continuous
     node: AnalogControl/GainAuto
-
-  # Not writable?
-  - name: gain
-    # Description: Controls the amplification of the video signal in dB.
-    type: float
-    # Valid values: x in [0.000000, 48.000000]
-    node: AnalogControl/Gain
 
   - name: black_level_selector
     # Description: Selects which black level to control.  Only All can be set
@@ -151,6 +129,49 @@ parameters:
     type: bool
     # Valid values: True, False
     node: AnalogControl/BlackLevelClampingEnable
+
+  # - name: balance_ratio_selector
+  #   # Description: Selects a balance ratio to configure once a balance ratio 
+  #     # control has been selected.
+  #   type: enum
+  #   # Valid values: Red, Blue
+  #   node: AnalogControl/BalanceRatioSelector
+
+  # - name: balance_ratio
+  #   # Description: Controls the balance ratio of the selected color relative 
+  #     # to green. Used for white balancing.
+  #   type: float
+  #   # Valid values: x in [0.250000, 4.000000]
+  #   node: AnalogControl/BalanceRatio
+
+  - name: balance_ratio_selector_red
+    type: enum
+    # Valid values: "Red"
+    node: AnalogControl/BalanceRatioSelector
+
+  - name: balance_ratio_red
+    type: float
+    # Valid values: x in [0.250000, 4.000000]
+    node: AnalogControl/BalanceRatio
+
+  - name: balance_ratio_selector_blue
+    type: enum
+    # Valid values: "Blue"
+    node: AnalogControl/BalanceRatioSelector
+
+  - name: balance_ratio_blue
+    type: float
+    # Valid values: x in [0.250000, 4.000000]
+    node: AnalogControl/BalanceRatio
+
+  - name: balance_white_auto
+    # Description: Sets the automatic white balance mode. Set to Off for manual
+      # control. Set to Once for a single automatic adjustment then return to
+      # Off. Set to Continuous for constant adjustment. In automatic modes, the
+      # camera adjusts the white balance to maximize the dynamic range.
+    type: enum
+    # Valid values: Off, Once, Continuous
+    node: AnalogControl/BalanceWhiteAuto
     
   - name: gamma
     # Description: Controls the gamma correction of pixel intensity.
@@ -163,6 +184,32 @@ parameters:
     type: bool
     # Valid values: True, False
     node: AnalogControl/GammaEnable
+
+  - name: sharpening_enable
+    # Description: Enable the sharpening feature.
+    type: bool
+    # Valid values: True, False
+    node: AnalogControl/SharpeningEnable
+
+  - name: sharpening
+    # Description: Controls the sharpening of the image.
+      # Sharpening enable must be set to True for this feature to work.
+    type: float
+    # Valid values: x in [3.224994, 100.000000]
+    node: AnalogControl/Sharpening
+
+  - name: denoise_enable
+    # Description: Enable the denoise feature.
+    type: bool
+    # Valid values: True, False
+    node: AnalogControl/DenoiseEnable
+
+  - name: denoise
+    # Description: Controls the denoise of the image.
+      # Denoise enable must be set to True for this feature to work.
+    type: int
+    # Valid values: x in [0, 100]
+    node: AnalogControl/Denoise
 
   ### Image Format Control ###
   - name: width
@@ -195,42 +242,12 @@ parameters:
     # Valid values: Mono8, Mono16, RGB8Packed, BayerRG8, BayerRG16, BGR8
     node: ImageFormatControl/PixelFormat
 
-  # Not writable
-  # - name: isp_enable
-  #   # Description: Controls whether the image processing core is used for
-  #     # optional pixel format mode (i.e. mono). Enabling ISP consumes more
-  #     # power but is required for auto algorithms (such as exposure and gain)
-  #     # to work. Pixel format bit depths that are greater than the sensor ADC
-  #     # bit depth utilize the full value range per pixel. When ISP is 
-        # disabled, raw sensor data is LSB aligned in each pixel.
-  #   type: bool
-  #   # Valid values: True, False
-  #   node: ImageFormatControl/ISPEnable
-
   - name: binning_selector
     # Description: Selects which binning engine is controlled by the 
       # BinningHorizontal and BinningVertical features.
     type: enum
     # Valid values: All, Sensor
     node: ImageFormatControl/BinningSelector
-
-  - name: binning_horizontal
-    # Description: Number of horizontal photo-sensitive cells to combine
-      # together. This reduces the horizontal resolution (width) of the image.
-      # A value of 1 indicates that no horizontal binning is performed by the
-      # camera. This value must be 1 for decimation to be active.
-    type: int
-    # Valid values: 1
-    node: ImageFormatControl/BinningHorizontal
-
-  - name: binning_vertical
-    # Description: Number of vertical photo-sensitive cells to combine together.
-      # This reduces the vertical resolution (height) of the image. A value of
-      # 1 indicates that no vertical binning is performed by the camera. This
-      # value must be 1 for decimation to be active.
-    type: int
-    # Valid values: 1
-    node: ImageFormatControl/BinningVertical
 
   - name: reverse_x
     # Description: Horizontally flips the image sent by the device. The region
@@ -248,12 +265,32 @@ parameters:
     # Valid values: True, False
     node: ImageFormatControl/ReverseY
 
-  - name: adc_bit_depth
-    # Description: Selects which ADC bit depth to use. A higher ADC bit depth
-      # results in better image quality but slower maximum frame rate.
-    type: enum
-    # Valid values: Bit10
-    node: ImageFormatControl/ADCBits
+  ### Color Transformation Control ###
+  - name: saturation_enable
+    # Description: Enable the saturation feature.
+    type: bool
+    # Valid values: True, False
+    node: ColorTransformationControl/SaturationEnable
+
+  - name: saturation
+    # Description: Controls the saturation of the image.
+      # Saturation enable must be set to True for this feature to work.
+    type: float
+    # Valid values: x in [0.000000, 1.999023]
+    node: ColorTransformationControl/Saturation
+
+  ### Auto Algorithm Control ###
+  - name: exposure_time_lower_limit
+    # Description: Sets the lower limit for the exposure time in microseconds.
+    type: float
+    # Valid values: x in [29.000000, 30000014.000000]
+    node: AutoAlgorithmControl/AutoExposureExposureTimeLowerLimit
+
+  - name: exposure_time_upper_limit
+    # Description: Sets the upper limit for the exposure time in microseconds.
+    type: float
+    # Valid values: x in [29.000000, 30000014.000000]
+    node: AutoAlgorithmControl/AutoExposureExposureTimeUpperLimit
 
   ### Chunk Data Control ###
   - name: chunk_mode_active
